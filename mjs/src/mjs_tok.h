@@ -127,7 +127,8 @@ enum {
   TOK_KEYWORD_LET,
   TOK_KEYWORD_UNDEFINED,
   TOK_MAX,
-  TOK_LF
+  TOK_LF,
+  TOK_CR
 };
 
 MJS_PRIVATE void pinit(const char *file_name, const char *buf, struct pstate *);
