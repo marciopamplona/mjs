@@ -4793,7 +4793,9 @@ enum {
   TOK_KEYWORD_WITH,
   TOK_KEYWORD_LET,
   TOK_KEYWORD_UNDEFINED,
-  TOK_MAX
+  TOK_MAX,
+  TOK_LF,
+  TOK_CR
 };
 
 MJS_PRIVATE void pinit(const char *file_name, const char *buf, struct pstate *);
@@ -13087,7 +13089,7 @@ clean:
 
 #define FAIL_ERR(p, code)                                                      \
   do {                                                                         \
-    mjs_set_errorf(p->mjs, code, "parse error at line %d: [%.*s]", p->line_no, \
+    mjs_set_errorf(p->mjs, code, "PARSE ERROR at line %d: [%.*s]", p->line_no, \
                    10, p->tok.ptr);                                            \
     return code;                                                               \
   } while (0)
@@ -13218,7 +13220,11 @@ static mjs_err_t parse_statement_list(struct pstate *p, int et) {
     if (drop) emit_byte(p, OP_DROP);
     res = parse_statement(p);
     drop = 1;
-    while (p->tok.tok == TOK_SEMICOLON) pnext1(p);
+    while (
+      (p->tok.tok == TOK_SEMICOLON) || 
+      (p->tok.tok == TOK_LF) || 
+      (p->tok.tok == TOK_CR)
+    ) pnext1(p);
   }
 
   /*
@@ -15063,6 +15069,8 @@ static int ptranslate(int tok) {
     case TT('>','>','='): return TOK_RSHIFT_ASSIGN;
     case TT('>','>','>'): return TOK_URSHIFT;
     case QT('>','>','>','='): return TOK_URSHIFT_ASSIGN;
+    case 0xa: return TOK_LF;
+    case 0xd: return TOK_CR;
   }
   /* clang-format on */
   return tok;

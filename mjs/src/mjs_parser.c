@@ -149,7 +149,11 @@ static mjs_err_t parse_statement_list(struct pstate *p, int et) {
     if (drop) emit_byte(p, OP_DROP);
     res = parse_statement(p);
     drop = 1;
-    while (p->tok.tok == (TOK_SEMICOLON || TOK_LF || TOK_CR)) pnext1(p);
+    while (
+      (p->tok.tok == TOK_SEMICOLON) || 
+      (p->tok.tok == TOK_LF) || 
+      (p->tok.tok == TOK_CR)
+    ) pnext1(p);
   }
 
   /*
