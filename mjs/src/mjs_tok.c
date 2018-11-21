@@ -200,6 +200,8 @@ static int ptranslate(int tok) {
     case TT('>','>','='): return TOK_RSHIFT_ASSIGN;
     case TT('>','>','>'): return TOK_URSHIFT;
     case QT('>','>','>','='): return TOK_URSHIFT_ASSIGN;
+    case 0xa: return TOK_LF;
+    case 0xd: return TOK_CR;
   }
   /* clang-format on */
   return tok;

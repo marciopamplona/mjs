@@ -18,7 +18,7 @@
 
 #define FAIL_ERR(p, code)                                                      \
   do {                                                                         \
-    mjs_set_errorf(p->mjs, code, "parse error at line %d: [%.*s]", p->line_no, \
+    mjs_set_errorf(p->mjs, code, "PARSE ERROR at line %d: [%.*s]", p->line_no, \
                    10, p->tok.ptr);                                            \
     return code;                                                               \
   } while (0)
@@ -149,7 +149,7 @@ static mjs_err_t parse_statement_list(struct pstate *p, int et) {
     if (drop) emit_byte(p, OP_DROP);
     res = parse_statement(p);
     drop = 1;
-    while (p->tok.tok == TOK_SEMICOLON) pnext1(p);
+    while (p->tok.tok == (TOK_SEMICOLON || TOK_LF || TOK_CR)) pnext1(p);
   }
 
   /*
